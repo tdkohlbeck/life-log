@@ -41,7 +41,7 @@ const AddDatumBar = ({
     <div id='add-datum-bar'>
       <form onSubmit={funcAddCurrentDatum}>
         <input
-          name     ={0}
+          name    ={0}
           value   ={arrCurrentDatum[0]}
           onChange={funcUpdateCurrentDatumInput}
         />

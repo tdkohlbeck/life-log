@@ -21,23 +21,22 @@ const reducer = (
 ) => {
 	switch (action.type) {
 		case 'ADD_CURRENT_DATUM':
-			const arrNewDatums = state.arrDatums.concat([state.arrCurrentDatum]); // concat one array, not two tags
 			return {
 				...state,
-				arrDatums: arrNewDatums,
+				arrDatums: state.arrDatums.concat(
+					[state.arrCurrentDatum] // concat one array not two tags
+				),
 			};
 		case 'UPDATE_CURRENT_DATUM':
-			const strNewTag = action.strTag;
-			const arrNewCurrentDatum = state.arrCurrentDatum
-				.map((strOldTag, i) => {
-					return i == action.intTagIndex ?
-					strNewTag :
-					strOldTag ;
-				});
-			console.log(arrNewCurrentDatum);
 			return {
 				...state,
-				arrCurrentDatum: arrNewCurrentDatum,
+				arrCurrentDatum: state.arrCurrentDatum.map(
+					(strTag, i) => {
+						return i == action.intTagIndex ?
+						action.strTag :
+						strTag ;
+					}
+				),
 			};
 		case 'CLEAR_CURRENT_DATUM':
 			return {
