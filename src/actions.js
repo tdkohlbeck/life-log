@@ -4,7 +4,7 @@ export const funcAddCurrentDatum = () => {
 	};
 };
 
-export const funcChangeCurrentDatumInput = (strDatum) => {
+export const funcUpdateCurrentDatumInput = (strDatum) => {
 	return {
 		type: 'CHANGE_CURRENT_DATUM',
 		strDatum,
