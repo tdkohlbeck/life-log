@@ -1,9 +1,18 @@
 const initState = {
 	arrDatums: [
-		'yey?',
-		'bravo!',
+		[
+			'yey?',
+			'bravo!',
+		],
+		[
+			'pinkie',
+			'pie',
+		],
 	],
-	strCurrentDatum: 'eh',
+	arrCurrentDatum: [
+		'eh',
+		'ah!',
+	],
 };
 
 const reducer = (
@@ -12,20 +21,31 @@ const reducer = (
 ) => {
 	switch (action.type) {
 		case 'ADD_CURRENT_DATUM':
+			const arrNewDatums = state.arrDatums.concat([state.arrCurrentDatum]); // concat one array, not two tags
 			return {
 				...state,
-				arrDatums: state
-					.arrDatums.concat(state.strCurrentDatum),
+				arrDatums: arrNewDatums,
 			};
-		case 'CHANGE_CURRENT_DATUM':
+		case 'UPDATE_CURRENT_DATUM':
+			const strNewTag = action.strTag;
+			const arrNewCurrentDatum = state.arrCurrentDatum
+				.map((strOldTag, i) => {
+					return i == action.intTagIndex ?
+					strNewTag :
+					strOldTag ;
+				});
+			console.log(arrNewCurrentDatum);
 			return {
 				...state,
-				strCurrentDatum: action.strDatum,
+				arrCurrentDatum: arrNewCurrentDatum,
 			};
 		case 'CLEAR_CURRENT_DATUM':
 			return {
 				...state,
-				strCurrentDatum: '',
+				arrCurrentDatum: [
+					'',
+					''
+				],
 			};
 		default:
 			return state;

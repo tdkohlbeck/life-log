@@ -23,7 +23,7 @@ const View = ({
               key={i}
               className='datum'
               >
-              {strDatum}
+              {`${strDatum[0]}, ${strDatum[1]}`}
             </li>
           );
         })}
@@ -33,7 +33,7 @@ const View = ({
 };
 
 const AddDatumBar = ({
-  strCurrentDatum,
+  arrCurrentDatum,
   funcUpdateCurrentDatumInput,
   funcAddCurrentDatum,
 }) => {
@@ -41,9 +41,15 @@ const AddDatumBar = ({
     <div id='add-datum-bar'>
       <form onSubmit={funcAddCurrentDatum}>
         <input
-          value={strCurrentDatum}
+          name     ={0}
+          value   ={arrCurrentDatum[0]}
           onChange={funcUpdateCurrentDatumInput}
-          />
+        />
+        <input
+          name    ={1}
+          value   ={arrCurrentDatum[1]}
+          onChange={funcUpdateCurrentDatumInput}
+        />
         <button
           onClick={funcAddCurrentDatum}
         ></button>
@@ -54,7 +60,7 @@ const AddDatumBar = ({
 
 const App = ({
   arrDatums,
-  strCurrentDatum,
+  arrCurrentDatum,
   funcAddCurrentDatum,
   funcUpdateCurrentDatumInput,
 }) => {
@@ -64,7 +70,7 @@ const App = ({
         arrDatums={arrDatums}
       />
       <AddDatumBar
-        strCurrentDatum            ={strCurrentDatum}
+        arrCurrentDatum            ={arrCurrentDatum}
         funcUpdateCurrentDatumInput={funcUpdateCurrentDatumInput}
         funcAddCurrentDatum        ={funcAddCurrentDatum}
       />
@@ -75,15 +81,15 @@ const App = ({
 const mapStateToProps = (state) => {
   return {
     arrDatums: state.arrDatums,
-    strCurrentDatum: state.strCurrentDatum,
+    arrCurrentDatum: state.arrCurrentDatum,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    funcUpdateCurrentDatumInput: (e) => dispatch(
-      funcUpdateCurrentDatumInput(e.target.value)
-    ),
+    funcUpdateCurrentDatumInput: (e) => {
+      dispatch(funcUpdateCurrentDatumInput(e.target.value, e.target.name));
+    },
     funcAddCurrentDatum: (e) => {
       e.preventDefault();
       dispatch(funcAddCurrentDatum());

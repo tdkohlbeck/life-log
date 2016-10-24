@@ -4,10 +4,11 @@ export const funcAddCurrentDatum = () => {
 	};
 };
 
-export const funcUpdateCurrentDatumInput = (strDatum) => {
+export const funcUpdateCurrentDatumInput = (strTag, intTagIndex) => {
 	return {
-		type: 'CHANGE_CURRENT_DATUM',
-		strDatum,
+		type: 'UPDATE_CURRENT_DATUM',
+		intTagIndex,
+		strTag,
 	};
 };
 
