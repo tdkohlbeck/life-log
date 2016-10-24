@@ -39,13 +39,15 @@ const AddDatumBar = ({
 }) => {
   return (
     <div id='add-datum-bar'>
-      <input
-        value={strCurrentDatum}
-        onChange={funcUpdateCurrentDatumInput}
-      />
-      <button
-        onClick={funcAddCurrentDatum}
-      ></button>
+      <form onSubmit={funcAddCurrentDatum}>
+        <input
+          value={strCurrentDatum}
+          onChange={funcUpdateCurrentDatumInput}
+          />
+        <button
+          onClick={funcAddCurrentDatum}
+        ></button>
+      </form>
     </div>
   );
 };
@@ -83,6 +85,7 @@ const mapDispatchToProps = (dispatch) => {
       funcUpdateCurrentDatumInput(e.target.value)
     ),
     funcAddCurrentDatum: (e) => {
+      e.preventDefault();
       dispatch(funcAddCurrentDatum());
       dispatch(funcClearCurrentDatum());
     },
