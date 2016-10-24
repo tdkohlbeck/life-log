@@ -1,4 +1,14 @@
-import React, { Component } from 'react';
+/* eslint-disable */
+
+import React from 'react';
+import { connect } from 'react-redux';
+
+import {
+  funcAddCurrentDatum,
+  funcUpdateCurrentDatumInput,
+  funcClearCurrentDatum,
+} from './actions';
+
 import './App.css';
 
 const View = ({
@@ -24,14 +34,14 @@ const View = ({
 
 const AddDatumBar = ({
   strCurrentDatum,
-  funcChangeCurrentDatumInput,
+  funcUpdateCurrentDatumInput,
   funcAddCurrentDatum,
 }) => {
   return (
     <div id='add-datum-bar'>
       <input
         value={strCurrentDatum}
-        onChange={funcChangeCurrentDatumInput}
+        onChange={funcUpdateCurrentDatumInput}
       />
       <button
         onClick={funcAddCurrentDatum}
@@ -40,21 +50,46 @@ const AddDatumBar = ({
   );
 };
 
-class App extends Component {
-  render() {
-    return (
-      <div className="app">
-        <View
-          arrDatums={['yey', 'brevo']}
-        />
-        <AddDatumBar
-          strCurrentDatum={'yay?'}
-          funcChangeCurrentDatumInput={e => console.log(e.target.value)}
-          funcAddCurrentDatum={e => console.log('render new arrDatums!')}
-        />
-      </div>
-    );
-  }
+const App = ({
+  arrDatums,
+  strCurrentDatum,
+  funcAddCurrentDatum,
+  funcUpdateCurrentDatumInput,
+}) => {
+  return (
+    <div className="app">
+      <View
+        arrDatums={arrDatums}
+      />
+      <AddDatumBar
+        strCurrentDatum            ={strCurrentDatum}
+        funcUpdateCurrentDatumInput={funcUpdateCurrentDatumInput}
+        funcAddCurrentDatum        ={funcAddCurrentDatum}
+      />
+    </div>
+  );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    arrDatums: state.arrDatums,
+    strCurrentDatum: state.strCurrentDatum,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    funcUpdateCurrentDatumInput: (e) => dispatch(
+      funcUpdateCurrentDatumInput(e.target.value)
+    ),
+    funcAddCurrentDatum: (e) => {
+      dispatch(funcAddCurrentDatum());
+      dispatch(funcClearCurrentDatum());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);;
