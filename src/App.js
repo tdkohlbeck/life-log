@@ -17,13 +17,19 @@ const View = ({
   return (
     <div id='view'>
       <ul>
-        {arrDatums.map((strDatum, i) => {
+        {arrDatums.map((arrDatum, i) => {
           return (
             <li
               key={i}
               className='datum'
-              >
-              {`${strDatum[0]}, ${strDatum[1]}`}
+            >
+              {arrDatum.map((strTag, i) => {
+                return (
+                  <span key={i} >
+                    {strTag + ' '}
+                  </span>
+                )
+              })}
             </li>
           );
         })}
@@ -40,16 +46,16 @@ const AddDatumBar = ({
   return (
     <div id='add-datum-bar'>
       <form onSubmit={funcAddCurrentDatum}>
-        <input
-          name    ={0}
-          value   ={arrCurrentDatum[0]}
-          onChange={funcUpdateCurrentDatumInput}
-        />
-        <input
-          name    ={1}
-          value   ={arrCurrentDatum[1]}
-          onChange={funcUpdateCurrentDatumInput}
-        />
+        {arrCurrentDatum.map((tag, i) => {
+          return (
+            <input
+              name    ={i}
+              key     ={i}
+              value   ={tag}
+              onChange={funcUpdateCurrentDatumInput}
+            />
+          );
+        })}
         <button
           onClick={funcAddCurrentDatum}
         ></button>
