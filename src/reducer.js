@@ -1,55 +1,64 @@
-const initState = {
-	arrDatums: [
-		[
-			'yey?',
-			'bravo!',
-		],
-		[
-			'pinkie',
-			'pie',
-		],
+import uuid from 'node-uuid';
+
+const objInitState = {
+	arrDatumList: [
+		{
+			strId: '0',
+			arrTags: [
+				'eh?',
+			],
+		},
+		{
+			strId: '1',
+			arrTags: [
+				'eh?',
+			],
+		},
 	],
-	arrCurrentDatum: [
-		'eh',
-		'ah!',
-	],
+	objCurrentDatum: {
+		strId: uuid.v4(),
+		arrTags: [
+			'',
+		],
+	},
 };
 
 const reducer = (
-	state = initState,
+	state = objInitState,
 	action
 ) => {
 	switch (action.type) {
 		case 'ADD_CURRENT_DATUM':
 			return {
 				...state,
-				arrDatums: state.arrDatums.concat(
-					[state.arrCurrentDatum] // concat one array not two tags
+				arrDatumList: state.arrDatumList.concat(
+					state.objCurrentDatum
 				),
 			};
 		case 'UPDATE_CURRENT_DATUM':
 			return {
 				...state,
-				arrCurrentDatum: state.arrCurrentDatum
-					// replace the tag that changed
-					.map((strTag, i) => {
-						return i == action.intTagIndex ?
-						action.strTag :
-						strTag ;
-					})
-					// remove any empty tags
-					.filter(strTag => {
-						return strTag != false; // '' == false
-					})
-					// make sure there's an empty tag available!
-					.concat(''),
+				objCurrentDatum: {
+					...state.objCurrentDatum,
+					arrTags: state.objCurrentDatum.arrTags
+						// replace the tag that changed
+						.map((strTag, i) => {
+							return i == action.intTagIndex ?
+							action.strTag :
+							strTag ;
+						})
+						// remove any empty tags
+						.filter(strTag => {
+							return strTag != false; // '' == false
+						})
+						// make sure there's an empty tag available!
+						.concat(''),
+				}
 			};
 		case 'CLEAR_CURRENT_DATUM':
 			return {
 				...state,
-				arrCurrentDatum: [
-					'',
-				],
+				objCurrentDatum: objInitState.objCurrentDatum,
 			};
 		default:
 			return state;

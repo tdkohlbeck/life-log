@@ -12,23 +12,24 @@ import {
 import './App.css';
 
 const View = ({
-  arrDatums,
+  arrDatumList,
 }) => {
   return (
     <div id='view'>
       <ul>
-        {arrDatums.map((arrDatum, i) => {
+        {arrDatumList.map((objDatum, i) => {
           return (
             <li
-              key={i}
-              className='datum'
+              id       ={objDatum.strId}
+              key      ={i}
+              className='li-datum'
             >
-              {arrDatum.map((strTag, i) => {
+              {objDatum.arrTags.map((strTag, i) => {
                 return (
                   <span key={i} >
                     {strTag + ' '}
                   </span>
-                )
+                );
               })}
             </li>
           );
@@ -39,19 +40,19 @@ const View = ({
 };
 
 const AddDatumBar = ({
-  arrCurrentDatum,
+  objCurrentDatum,
   funcUpdateCurrentDatumInput,
   funcAddCurrentDatum,
 }) => {
   return (
     <div id='add-datum-bar'>
       <form onSubmit={funcAddCurrentDatum}>
-        {arrCurrentDatum.map((tag, i) => {
+        {objCurrentDatum.arrTags.map((strTag, i) => {
           return (
             <input
               name    ={i}
               key     ={i}
-              value   ={tag}
+              value   ={strTag}
               onChange={funcUpdateCurrentDatumInput}
             />
           );
@@ -65,18 +66,18 @@ const AddDatumBar = ({
 };
 
 const App = ({
-  arrDatums,
-  arrCurrentDatum,
+  arrDatumList,
+  objCurrentDatum,
   funcAddCurrentDatum,
   funcUpdateCurrentDatumInput,
 }) => {
   return (
     <div className="app">
       <View
-        arrDatums={arrDatums}
+        arrDatumList={arrDatumList}
       />
       <AddDatumBar
-        arrCurrentDatum            ={arrCurrentDatum}
+        objCurrentDatum            ={objCurrentDatum}
         funcUpdateCurrentDatumInput={funcUpdateCurrentDatumInput}
         funcAddCurrentDatum        ={funcAddCurrentDatum}
       />
@@ -86,8 +87,8 @@ const App = ({
 
 const mapStateToProps = (state) => {
   return {
-    arrDatums: state.arrDatums,
-    arrCurrentDatum: state.arrCurrentDatum,
+    arrDatumList: state.arrDatumList,
+    objCurrentDatum: state.objCurrentDatum,
   };
 };
 
