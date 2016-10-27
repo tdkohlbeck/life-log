@@ -7,12 +7,16 @@ import {
   funcAddCurrentDatum,
   funcUpdateCurrentDatumInput,
   funcClearCurrentDatum,
+  funcEditDatum,
+  funcDeleteDatum,
 } from './actions';
 
 import './App.css';
 
 const View = ({
   arrDatumList,
+  funcEditDatum,
+  funcDeleteDatum,
 }) => {
   return (
     <div id='view'>
@@ -20,7 +24,6 @@ const View = ({
         {arrDatumList.map((objDatum, i) => {
           return (
             <li
-              id       ={objDatum.strId}
               key      ={i}
               className='li-datum'
             >
@@ -31,6 +34,17 @@ const View = ({
                   </span>
                 );
               })}
+              <button
+                name='edit'
+                value={objDatum.strId}
+                onClick={funcEditDatum}
+              >e</button>
+              <span>{' '}</span>
+              <button
+                name='delete'
+                value={objDatum.strId}
+                onClick={funcDeleteDatum}
+              >x</button>
             </li>
           );
         })}
@@ -57,6 +71,7 @@ const AddDatumBar = ({
             />
           );
         })}
+        <span>{' '}</span>
         <button
           onClick={funcAddCurrentDatum}
         ></button>
@@ -70,11 +85,15 @@ const App = ({
   objCurrentDatum,
   funcAddCurrentDatum,
   funcUpdateCurrentDatumInput,
+  funcEditDatum,
+  funcDeleteDatum,
 }) => {
   return (
     <div className="app">
       <View
-        arrDatumList={arrDatumList}
+        arrDatumList   ={arrDatumList}
+        funcEditDatum  ={funcEditDatum}
+        funcDeleteDatum={funcDeleteDatum}
       />
       <AddDatumBar
         objCurrentDatum            ={objCurrentDatum}
@@ -101,6 +120,12 @@ const mapDispatchToProps = (dispatch) => {
       e.preventDefault();
       dispatch(funcAddCurrentDatum());
       dispatch(funcClearCurrentDatum());
+    },
+    funcEditDatum: (e) => {
+      dispatch(funcEditDatum(e.target.value));
+    },
+    funcDeleteDatum: (e) => {
+      dispatch(funcDeleteDatum(e.target.value));
     },
   };
 };

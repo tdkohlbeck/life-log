@@ -17,3 +17,17 @@ export const funcClearCurrentDatum = () => {
 		type: 'CLEAR_CURRENT_DATUM',
 	};
 };
+
+export const funcEditDatum = strId => {
+	return {
+		type: 'EDIT_DATUM',
+		strId,
+	};
+};
+
+export const funcDeleteDatum = strId => {
+	return {
+		type: 'DELETE_DATUM',
+		strId,
+	};
+};
