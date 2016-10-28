@@ -58,6 +58,7 @@ const AddDatumBar = ({
   funcUpdateCurrentDatumInput,
   funcAddCurrentDatum,
 }) => {
+  console.log(objCurrentDatum.arrTags[0]);
   return (
     <div id='add-datum-bar'>
       <form onSubmit={funcAddCurrentDatum}>

@@ -3,15 +3,18 @@ import uuid from 'node-uuid';
 const objInitState = {
 	arrDatumList: [
 		{
-			strId: '0',
+			strId: uuid.v4(),
 			arrTags: [
-				'eh?',
+				'yay',
+				'bravo',
+				'',
 			],
 		},
 		{
-			strId: '1',
+			strId: uuid.v4(),
 			arrTags: [
 				'eh?',
+				'',
 			],
 		},
 	],
@@ -50,11 +53,21 @@ const reducer = (
 			return {
 				...state,
 				arrDatumList: state.arrDatumList.filter(datum => {
-					return datum.strId != action.strId;
+					return datum.strId !== action.strId;
 				}),
 			};
 		case 'EDIT_DATUM':
-			return state;
+			return {
+				...state,
+				objAddDatumBar: {
+					...state.objAddDatumBar,
+					mode: 'edit', // TODO: change button to new func
+												// 			 and replace not append datum
+				},
+				objCurrentDatum: state.arrDatumList.filter(datum => {
+					return datum.strId === action.strId;
+				})[0],
+			};
 		case 'UPDATE_CURRENT_DATUM':
 			return {
 				...state,
