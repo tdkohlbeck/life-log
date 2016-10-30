@@ -26,7 +26,7 @@ const objInitState = {
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
 		strId: uuid.v4(),
-		numTime: undefined,
+		numTime: Date.now(),
 		arrTags: [
 			'',
 		],
@@ -56,6 +56,7 @@ const reducer = (
 				...state,
 				objCurrentDatum: {
 					...objInitState.objCurrentDatum,
+					numTime: Date.now(),
 					strId: uuid.v4(),
 				},
 			};
