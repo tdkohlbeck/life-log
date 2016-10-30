@@ -21,6 +21,7 @@ const objInitState = {
 	objDatumBar: {
 		strMode: 'add',
 	},
+	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
 		strId: uuid.v4(),
 		arrTags: [
@@ -40,6 +41,11 @@ const reducer = (
 				arrDatumList: state.arrDatumList.concat(
 					state.objCurrentDatum
 				),
+			};
+		case 'CACHE_CURRENT_DATUM':
+			return {
+				...state,
+				objDatumCache: state.objCurrentDatum,
 			};
 		case 'CLEAR_CURRENT_DATUM':
 			return {
@@ -79,6 +85,12 @@ const reducer = (
 					state.objCurrentDatum : datum;
 				}),
 				objCurrentDatum: objInitState.objCurrentDatum,
+			};
+		case 'UNCACHE_DATUM':
+			return {
+				...state,
+				objCurrentDatum: state.objDatumCache,
+				objDatumCache: {},
 			};
 		case 'UPDATE_CURRENT_DATUM':
 			return {

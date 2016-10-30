@@ -6,10 +6,12 @@ import { connect } from 'react-redux';
 import {
   funcAddCurrentDatum,
   funcUpdateCurrentDatum,
+  funcCacheCurrentDatum,
   funcClearCurrentDatum,
   funcEditDatum,
   funcDeleteDatum,
-  funcSaveCurrentDatum
+  funcSaveCurrentDatum,
+  funcUncacheDatum,
 } from './actions';
 
 import './App.css';
@@ -139,12 +141,13 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(funcDeleteDatum(e.target.value));
     },
     funcEditDatum: (e) => {
+      dispatch(funcCacheCurrentDatum())
       dispatch(funcEditDatum(e.target.value));
     },
     funcSaveCurrentDatum: (e) => {
       e.preventDefault();
       dispatch(funcSaveCurrentDatum());
-      dispatch(funcClearCurrentDatum());
+      dispatch(funcUncacheDatum());
     },
     funcUpdateCurrentDatum: (e) => {
       dispatch(funcUpdateCurrentDatum(

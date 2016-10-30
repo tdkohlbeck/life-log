@@ -12,6 +12,12 @@ export const funcUpdateCurrentDatum = (strTag, intTagIndex) => {
 	};
 };
 
+export const funcCacheCurrentDatum = () => {
+	return {
+		type: 'CACHE_CURRENT_DATUM',
+	};
+};
+
 export const funcClearCurrentDatum = () => {
 	return {
 		type: 'CLEAR_CURRENT_DATUM',
@@ -35,5 +41,11 @@ export const funcDeleteDatum = (strId) => {
 export const funcSaveCurrentDatum = () => {
 	return {
 		type: 'SAVE_CURRENT_DATUM',
+	};
+};
+
+export const funcUncacheDatum = () => {
+	return {
+		type: 'UNCACHE_DATUM',
 	};
 };
