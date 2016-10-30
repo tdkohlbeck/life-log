@@ -18,8 +18,8 @@ const objInitState = {
 			],
 		},
 	],
-	objAddDatumBar: {
-		mode: 'add',
+	objDatumBar: {
+		strMode: 'add',
 	},
 	objCurrentDatum: { // datumCurrent ?
 		strId: uuid.v4(),
@@ -59,14 +59,26 @@ const reducer = (
 		case 'EDIT_DATUM':
 			return {
 				...state,
-				objAddDatumBar: {
-					...state.objAddDatumBar,
-					mode: 'edit', // TODO: change button to new func
-												// 			 and replace not append datum
+				objDatumBar: {
+					...state.objDatumBar,
+					strMode: 'edit',
 				},
 				objCurrentDatum: state.arrDatumList.filter(datum => {
 					return datum.strId === action.strId;
-				})[0],
+				})[0], // escape array returned by filter
+			};
+		case 'SAVE_CURRENT_DATUM':
+			return {
+				...state,
+				objDatumBar: {
+					...state.objDatumBar,
+					strMode: 'add',
+				},
+				arrDatumList: state.arrDatumList.map(datum => {
+					return datum.strId === state.objCurrentDatum.strId ?
+					state.objCurrentDatum : datum;
+				}),
+				objCurrentDatum: objInitState.objCurrentDatum,
 			};
 		case 'UPDATE_CURRENT_DATUM':
 			return {

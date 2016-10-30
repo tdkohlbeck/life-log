@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 
 import {
   funcAddCurrentDatum,
-  funcUpdateCurrentDatumInput,
+  funcUpdateCurrentDatum,
   funcClearCurrentDatum,
   funcEditDatum,
   funcDeleteDatum,
+  funcSaveCurrentDatum
 } from './actions';
 
 import './App.css';
@@ -53,28 +54,38 @@ const View = ({
   );
 };
 
-const AddDatumBar = ({
+const DatumBar = ({
   objCurrentDatum,
-  funcUpdateCurrentDatumInput,
+  funcUpdateCurrentDatum,
   funcAddCurrentDatum,
+  funcSaveCurrentDatum,
+  strDatumBarMode,
 }) => {
-  console.log(objCurrentDatum.arrTags[0]);
+  let funcOnSubmit;
+  switch(strDatumBarMode) {
+    case 'add':
+      funcOnSubmit = funcAddCurrentDatum;
+      break;
+    case 'edit':
+      funcOnSubmit = funcSaveCurrentDatum;
+      break;
+  }
   return (
-    <div id='add-datum-bar'>
-      <form onSubmit={funcAddCurrentDatum}>
+    <div id='datum-bar'>
+      <form onSubmit={funcOnSubmit} >
         {objCurrentDatum.arrTags.map((strTag, i) => {
           return (
             <input
               name    ={i}
               key     ={i}
               value   ={strTag}
-              onChange={funcUpdateCurrentDatumInput}
+              onChange={funcUpdateCurrentDatum}
             />
           );
         })}
         <span>{' '}</span>
         <button
-          onClick={funcAddCurrentDatum}
+          onClick={funcOnSubmit}
         ></button>
       </form>
     </div>
@@ -84,10 +95,12 @@ const AddDatumBar = ({
 const App = ({
   arrDatumList,
   objCurrentDatum,
-  funcAddCurrentDatum,
-  funcUpdateCurrentDatumInput,
+  strDatumBarMode,
+  funcUpdateCurrentDatum,
   funcEditDatum,
   funcDeleteDatum,
+  funcAddCurrentDatum,
+  funcSaveCurrentDatum,
 }) => {
   return (
     <div className="app">
@@ -96,10 +109,12 @@ const App = ({
         funcEditDatum  ={funcEditDatum}
         funcDeleteDatum={funcDeleteDatum}
       />
-      <AddDatumBar
-        objCurrentDatum            ={objCurrentDatum}
-        funcUpdateCurrentDatumInput={funcUpdateCurrentDatumInput}
-        funcAddCurrentDatum        ={funcAddCurrentDatum}
+      <DatumBar
+        objCurrentDatum       ={objCurrentDatum}
+        funcUpdateCurrentDatum={funcUpdateCurrentDatum}
+        strDatumBarMode       ={strDatumBarMode}
+        funcAddCurrentDatum   ={funcAddCurrentDatum}
+        funcSaveCurrentDatum  ={funcSaveCurrentDatum}
       />
     </div>
   );
@@ -109,24 +124,33 @@ const mapStateToProps = (state) => {
   return {
     arrDatumList: state.arrDatumList,
     objCurrentDatum: state.objCurrentDatum,
+    strDatumBarMode: state.objDatumBar.strMode,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    funcUpdateCurrentDatumInput: (e) => {
-      dispatch(funcUpdateCurrentDatumInput(e.target.value, e.target.name));
-    },
     funcAddCurrentDatum: (e) => {
       e.preventDefault();
       dispatch(funcAddCurrentDatum());
       dispatch(funcClearCurrentDatum());
     },
+    funcDeleteDatum: (e) => {
+      dispatch(funcDeleteDatum(e.target.value));
+    },
     funcEditDatum: (e) => {
       dispatch(funcEditDatum(e.target.value));
     },
-    funcDeleteDatum: (e) => {
-      dispatch(funcDeleteDatum(e.target.value));
+    funcSaveCurrentDatum: (e) => {
+      e.preventDefault();
+      dispatch(funcSaveCurrentDatum());
+      dispatch(funcClearCurrentDatum());
+    },
+    funcUpdateCurrentDatum: (e) => {
+      dispatch(funcUpdateCurrentDatum(
+        e.target.value,
+        e.target.name
+      ));
     },
   };
 };

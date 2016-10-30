@@ -4,7 +4,7 @@ export const funcAddCurrentDatum = () => {
 	};
 };
 
-export const funcUpdateCurrentDatumInput = (strTag, intTagIndex) => {
+export const funcUpdateCurrentDatum = (strTag, intTagIndex) => {
 	return {
 		type: 'UPDATE_CURRENT_DATUM',
 		intTagIndex,
@@ -18,16 +18,22 @@ export const funcClearCurrentDatum = () => {
 	};
 };
 
-export const funcEditDatum = strId => {
+export const funcEditDatum = (strId) => {
 	return {
 		type: 'EDIT_DATUM',
 		strId,
 	};
 };
 
-export const funcDeleteDatum = strId => {
+export const funcDeleteDatum = (strId) => {
 	return {
 		type: 'DELETE_DATUM',
 		strId,
+	};
+};
+
+export const funcSaveCurrentDatum = () => {
+	return {
+		type: 'SAVE_CURRENT_DATUM',
 	};
 };
