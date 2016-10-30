@@ -76,9 +76,14 @@ const DatumBar = ({
       funcOnSubmit = funcSaveCurrentDatum;
       break;
   }
+  let time = new Date(objCurrentDatum.numTime).toLocaleTimeString();
   return (
     <div id='datum-bar'>
       <form onSubmit={funcOnSubmit} >
+        <input
+          name='time'
+          placeholder={time}
+        />
         {objCurrentDatum.arrTags.map((strTag, i) => {
           return (
             <input

@@ -26,7 +26,7 @@ const objInitState = {
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
 		strId: uuid.v4(),
-		numTime: Date.now(),
+		numTime: undefined,
 		arrTags: [
 			'',
 		],
@@ -100,6 +100,9 @@ const reducer = (
 				...state,
 				objCurrentDatum: {
 					...state.objCurrentDatum,
+					numTime: state.objDatumBar.strMode == 'edit' ?
+						state.objCurrentDatum.numTime :
+						Date.now() ,
 					arrTags: state.objCurrentDatum.arrTags
 						// replace the tag that changed
 						.map((strTag, i) => {
