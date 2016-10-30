@@ -4,6 +4,7 @@ const objInitState = {
 	arrDatumList: [
 		{
 			strId: uuid.v4(),
+			numTime: Date.now(),
 			arrTags: [
 				'yay',
 				'bravo',
@@ -12,6 +13,7 @@ const objInitState = {
 		},
 		{
 			strId: uuid.v4(),
+			numTime: Date.now(),
 			arrTags: [
 				'eh?',
 				'',
@@ -24,6 +26,7 @@ const objInitState = {
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
 		strId: uuid.v4(),
+		numTime: Date.now(),
 		arrTags: [
 			'',
 		],
@@ -38,9 +41,10 @@ const reducer = (
 		case 'ADD_CURRENT_DATUM':
 			return {
 				...state,
-				arrDatumList: state.arrDatumList.concat(
-					state.objCurrentDatum
-				),
+				arrDatumList: state.arrDatumList.concat({
+					...state.objCurrentDatum,
+					numTime: Date.now(),
+				}),
 			};
 		case 'CACHE_CURRENT_DATUM':
 			return {
@@ -84,7 +88,6 @@ const reducer = (
 					return datum.strId === state.objCurrentDatum.strId ?
 					state.objCurrentDatum : datum;
 				}),
-				objCurrentDatum: objInitState.objCurrentDatum,
 			};
 		case 'UNCACHE_DATUM':
 			return {

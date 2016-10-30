@@ -25,11 +25,15 @@ const View = ({
     <div id='view'>
       <ul>
         {arrDatumList.map((objDatum, i) => {
+          let strTime = new Date(objDatum.numTime);
           return (
             <li
               key      ={i}
               className='li-datum'
             >
+              <span>
+                {strTime.toLocaleTimeString() + ' '}
+              </span>
               {objDatum.arrTags.map((strTag, i) => {
                 return (
                   <span key={i} >
