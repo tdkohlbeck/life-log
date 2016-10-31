@@ -27,3 +27,11 @@
 * export to csv/json
 * hook up db (pouch db)
 * arrays inside tags? (for structured data)
+* tags with key-value pairs
+	- detect colon
+	- register input as key
+	- convert to button
+		-on focus convert back to input
+		-on unfocus convert backt to button
+	- auto-focus next input
+	- register input as value pair

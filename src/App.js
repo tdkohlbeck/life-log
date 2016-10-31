@@ -8,6 +8,8 @@ import {
   funcUpdateCurrentDatum,
   funcCacheCurrentDatum,
   funcClearCurrentDatum,
+  funcConvertToButton,
+  funcConvertToInput,
   funcEditDatum,
   funcDeleteDatum,
   funcSaveCurrentDatum,
@@ -34,10 +36,10 @@ const View = ({
               <span>
                 {strTime.toLocaleTimeString() + ' '}
               </span>
-              {objDatum.arrTags.map((strTag, i) => {
+              {objDatum.arrTags.map((objTag, i) => {
                 return (
                   <span key={i} >
-                    {strTag + ' '}
+                    {`${objTag.strName}: ${objTag.numValue}, `}
                   </span>
                 );
               })}
@@ -61,10 +63,13 @@ const View = ({
 };
 
 const DatumBar = ({
-  objCurrentDatum,
-  funcUpdateCurrentDatum,
   funcAddCurrentDatum,
+  funcConvertToButton,
+  funcConvertToInput,
   funcSaveCurrentDatum,
+  funcUpdateCurrentDatum,
+  numInputFocused,
+  objCurrentDatum,
   strDatumBarMode,
 }) => {
   let funcOnSubmit;
@@ -80,17 +85,23 @@ const DatumBar = ({
   return (
     <div id='datum-bar'>
       <form onSubmit={funcOnSubmit} >
-        <input
+        <button
           name='time'
           placeholder={time}
-        />
-        {objCurrentDatum.arrTags.map((strTag, i) => {
+          onClick={e => e.preventDefault()}
+          onFocus={funcConvertToInput}
+          onBlur={funcConvertToButton}
+        >{time}</button>
+        {objCurrentDatum.arrTags.map((objTag, i) => {
           return (
             <input
-              name    ={i}
-              key     ={i}
-              value   ={strTag}
+              name={i}
+              key={i}
+              value={objTag.strName}
+              type={i === numInputFocused? 'text' : 'button'}
               onChange={funcUpdateCurrentDatum}
+              onBlur={funcConvertToButton}
+              onFocus={funcConvertToInput}
             />
           );
         })}
@@ -105,13 +116,16 @@ const DatumBar = ({
 
 const App = ({
   arrDatumList,
+  funcAddCurrentDatum,
+  funcDeleteDatum,
+  funcEditDatum,
+  funcSaveCurrentDatum,
+  funcUpdateCurrentDatum,
+  funcConvertToButton,
+  funcConvertToInput,
+  numInputFocused,
   objCurrentDatum,
   strDatumBarMode,
-  funcUpdateCurrentDatum,
-  funcEditDatum,
-  funcDeleteDatum,
-  funcAddCurrentDatum,
-  funcSaveCurrentDatum,
 }) => {
   return (
     <div className="app">
@@ -121,11 +135,14 @@ const App = ({
         funcDeleteDatum={funcDeleteDatum}
       />
       <DatumBar
-        objCurrentDatum       ={objCurrentDatum}
         funcUpdateCurrentDatum={funcUpdateCurrentDatum}
-        strDatumBarMode       ={strDatumBarMode}
         funcAddCurrentDatum   ={funcAddCurrentDatum}
         funcSaveCurrentDatum  ={funcSaveCurrentDatum}
+        funcConvertToButton   ={funcConvertToButton}
+        funcConvertToInput    ={funcConvertToInput}
+        objCurrentDatum       ={objCurrentDatum}
+        numInputFocused       ={numInputFocused}
+        strDatumBarMode       ={strDatumBarMode}
       />
     </div>
   );
@@ -136,6 +153,7 @@ const mapStateToProps = (state) => {
     arrDatumList: state.arrDatumList,
     objCurrentDatum: state.objCurrentDatum,
     strDatumBarMode: state.objDatumBar.strMode,
+    numInputFocused: state.objDatumBar.numInputFocused,
   };
 };
 
@@ -145,6 +163,16 @@ const mapDispatchToProps = (dispatch) => {
       e.preventDefault();
       dispatch(funcAddCurrentDatum());
       dispatch(funcClearCurrentDatum());
+    },
+    funcConvertToButton: (e) => {
+      e.preventDefault();
+      let intTagIndex = parseInt(e.target.name);
+      dispatch(funcConvertToButton(intTagIndex));
+    },
+    funcConvertToInput: (e) => {
+      e.preventDefault();
+      let intTagIndex = parseInt(e.target.name);
+      dispatch(funcConvertToInput(intTagIndex));
     },
     funcDeleteDatum: (e) => {
       dispatch(funcDeleteDatum(e.target.value));

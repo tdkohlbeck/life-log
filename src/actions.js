@@ -4,6 +4,20 @@ export const funcAddCurrentDatum = () => {
 	};
 };
 
+export const funcConvertToButton = (intTagIndex) => {
+	return {
+		type: 'CONVERT_TO_BUTTON',
+		intTagIndex,
+	};
+};
+
+export const funcConvertToInput = (intTagIndex) => {
+	return {
+		type: 'CONVERT_TO_INPUT',
+		intTagIndex,
+	};
+};
+
 export const funcUpdateCurrentDatum = (strTag, intTagIndex) => {
 	return {
 		type: 'UPDATE_CURRENT_DATUM',

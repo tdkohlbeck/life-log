@@ -6,29 +6,44 @@ const objInitState = {
 			strId: uuid.v4(),
 			numTime: Date.now(),
 			arrTags: [
-				'yay',
-				'bravo',
-				'',
+				{
+					strName: 'meditate',
+				},
+				{
+					strName: 'minutes',
+					numValue: 30,
+				},
 			],
 		},
 		{
 			strId: uuid.v4(),
 			numTime: Date.now(),
 			arrTags: [
-				'eh?',
-				'',
+				{
+					strName: 'exercise',
+				},
+				{
+					strName: 'squats',
+					numValue: 100,
+				},
+				{
+					strName: 'heartrate',
+					numValue: 158,
+				},
 			],
 		},
 	],
 	objDatumBar: {
 		strMode: 'add',
+		numInputFocused: 0
 	},
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
 		strId: uuid.v4(),
 		numTime: Date.now(),
 		arrTags: [
-			'',
+			'a',
+			'b',
 		],
 	},
 };
@@ -60,6 +75,15 @@ const reducer = (
 					strId: uuid.v4(),
 				},
 			};
+		case 'CONVERT_TO_INPUT':
+			return {
+				...state,
+				objDatumBar: {
+					...state.objDatumBar,
+					numInputFocused: action.intTagIndex,
+				},
+			};
+		//case 'CONVERT_TO_BUTTON':
 		case 'DELETE_DATUM':
 			return {
 				...state,
@@ -97,6 +121,8 @@ const reducer = (
 				objDatumCache: {},
 			};
 		case 'UPDATE_CURRENT_DATUM':
+			let strLastChar = action.strTag
+				.charAt(action.strTag.length - 1);
 			return {
 				...state,
 				objCurrentDatum: {
