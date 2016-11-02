@@ -27,6 +27,7 @@ export const funcUpdateFocusedTagName = (strTagName, numIndex) => {
 };
 
 export const funcUpdateFocusedTagValue = (strTagValue, numIndex) => {
+	console.log(strTagValue);
 	return {
 		type: 'UPDATE_FOCUSED_TAG_VALUE',
 		numIndex,

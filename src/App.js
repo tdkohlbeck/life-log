@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   funcAddCurrentDatum,
   funcUpdateFocusedTagName,
+  funcUpdateFocusedTagValue,
   funcCacheCurrentDatum,
   funcClearCurrentDatum,
   funcConvertToButton,
@@ -105,7 +106,7 @@ const DatumBar = ({
           onBlur={funcConvertToButton}
         />
         {objCurrentDatum.arrTags.map((objTag, i) => {
-          if (objTag.strValue) {
+          if (objTag.strName) {
             return (
               <span key={i+99}>
                 <input
@@ -118,9 +119,12 @@ const DatumBar = ({
                   onFocus={funcConvertToInput}
                 />
                 <input
+                  name={i+1}
                   key={i-99}
                   value={objTag.strValue}
-                  onChange={funcUpdateFocusedTagName}
+                  onChange={funcUpdateFocusedTagValue}
+                  onBlur={funcConvertToButton}
+                  onFocus={funcConvertToInput}
                 />
               </span>
             );
@@ -145,7 +149,9 @@ const DatumBar = ({
           onClick={funcOnSubmit}
           onBlur={funcConvertToButton}
           onFocus={funcConvertToInput}
-        ></button>
+        >
+          {strDatumBarMode == 'add' ? '+' : 'e'}
+        </button>
       </form>
     </div>
   );
@@ -158,6 +164,7 @@ const App = ({
   funcEditDatum,
   funcSaveCurrentDatum,
   funcUpdateFocusedTagName,
+  funcUpdateFocusedTagValue,
   funcConvertToButton,
   funcConvertToInput,
   numTagIndexFocused,
@@ -173,6 +180,7 @@ const App = ({
       />
       <DatumBar
         funcUpdateFocusedTagName={funcUpdateFocusedTagName}
+        funcUpdateFocusedTagValue={funcUpdateFocusedTagValue}
         funcAddCurrentDatum   ={funcAddCurrentDatum}
         funcSaveCurrentDatum  ={funcSaveCurrentDatum}
         funcConvertToButton   ={funcConvertToButton}
@@ -229,6 +237,12 @@ const mapDispatchToProps = (dispatch) => {
         parseInt(e.target.name)
       ));
     },
+    funcUpdateFocusedTagValue: (e) => {
+      dispatch(funcUpdateFocusedTagValue(
+        e.target.value,
+        parseInt(e.target.name)
+      ));
+    }
   };
 };
 

@@ -50,6 +50,7 @@ const objInitState = {
 		arrTags: [
 			{
 				strName: '',
+				strValue: '',
 			},
 		],
 	},
@@ -173,7 +174,30 @@ const reducer = (
 						}),
 				}
 			};
-		//case 'UPDATE_FOCUSED_TAG_VALUE':
+		case 'UPDATE_FOCUSED_TAG_VALUE':
+			return {
+				...state,
+				objCurrentDatum: {
+					...state.objCurrentDatum,
+					numTime: state.objDatumBar.strMode === 'edit' ?
+						state.objCurrentDatum.numTime :
+						Date.now() ,
+					arrTags: state.objCurrentDatum.arrTags
+						// replace the tag that changed
+						.map((objTag, i) => {
+							return i+1 === action.numIndex ?
+							{
+								strName: objTag.strName,
+								strValue: action.strTagValue
+							} :
+							objTag ;
+						})
+						// remove any empty tags
+						.filter(objTag => {
+							return objTag.strValue != ''; // '' == false
+						}),
+				}
+			}
 		default:
 			return state;
 	}
