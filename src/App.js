@@ -16,6 +16,8 @@ import {
   funcUncacheDatum,
 } from './actions';
 
+import { getTimeString } from './utils';
+
 import './App.css';
 
 const View = ({
@@ -27,19 +29,26 @@ const View = ({
     <div id='view'>
       <ul>
         {arrDatumList.map((objDatum, i) => {
-          let strTime = new Date(objDatum.numTime);
+          let strTime = getTimeString(
+            objDatum.numTime
+            //['Hours', 'Minutes', 'Seconds']
+          );
           return (
             <li
               key      ={i}
               className='li-datum'
             >
               <span>
-                {strTime.toLocaleTimeString() + ' '}
+                {strTime + ' '}
               </span>
               {objDatum.arrTags.map((objTag, i) => {
                 return (
                   <span key={i} >
-                    {`${objTag.strName}: ${objTag.numValue}, `}
+                    {
+                      objTag.numValue ?
+                      `${objTag.strName}: ${objTag.numValue}, ` :
+                      `${objTag.strName}, `
+                    }
                   </span>
                 );
               })}
@@ -85,20 +94,23 @@ const DatumBar = ({
   return (
     <div id='datum-bar'>
       <form onSubmit={funcOnSubmit} >
-        <button
-          name='time'
-          placeholder={time}
-          onClick={e => e.preventDefault()}
+        <input
+          name={0}
+          type={numInputFocused === 0 ? 'text' : 'button'}
+          autoFocus={numInputFocused === 0 ? true : false}
+          value={time}
+          onChange={funcUpdateCurrentDatum}
           onFocus={funcConvertToInput}
           onBlur={funcConvertToButton}
-        >{time}</button>
+        />
         {objCurrentDatum.arrTags.map((objTag, i) => {
           return (
             <input
-              name={i}
-              key={i}
+              autoFocus={numInputFocused === i+1 ? true : false}
+              name={i+1}
+              key={i+1}
               value={objTag.strName}
-              type={i === numInputFocused? 'text' : 'button'}
+              type={i+1 === numInputFocused ? 'text' : 'button'}
               onChange={funcUpdateCurrentDatum}
               onBlur={funcConvertToButton}
               onFocus={funcConvertToInput}
@@ -107,7 +119,10 @@ const DatumBar = ({
         })}
         <span>{' '}</span>
         <button
+          name={objCurrentDatum.arrTags.length + 1}
           onClick={funcOnSubmit}
+          onBlur={funcConvertToButton}
+          onFocus={funcConvertToInput}
         ></button>
       </form>
     </div>

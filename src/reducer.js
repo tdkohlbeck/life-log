@@ -35,15 +35,16 @@ const objInitState = {
 	],
 	objDatumBar: {
 		strMode: 'add',
-		numInputFocused: 0
+		numInputFocused: 1
 	},
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
 		strId: uuid.v4(),
 		numTime: Date.now(),
 		arrTags: [
-			'a',
-			'b',
+			{
+				strName: '',
+			},
 		],
 	},
 };
@@ -90,6 +91,10 @@ const reducer = (
 				arrDatumList: state.arrDatumList.filter(datum => {
 					return datum.strId !== action.strId;
 				}),
+				objCurrentDatum: state.objDatumBar.strMode === 'edit' &&
+					state.objCurrentDatum.strId === action.strId ?
+					objInitState.objCurrentDatum :
+					state.objCurrentDatum,
 			};
 		case 'EDIT_DATUM':
 			return {
@@ -132,17 +137,19 @@ const reducer = (
 						Date.now() ,
 					arrTags: state.objCurrentDatum.arrTags
 						// replace the tag that changed
-						.map((strTag, i) => {
-							return i == action.intTagIndex ?
-							action.strTag :
-							strTag ;
+						.map((objTag, i) => {
+							return i+1 == action.intTagIndex ?
+							{strName: action.strTag} :
+							objTag ;
 						})
 						// remove any empty tags
-						.filter(strTag => {
-							return strTag != false; // '' == false
+						.filter(objTag => {
+							return objTag.strName != ''; // '' == false
 						})
 						// make sure there's an empty tag available!
-						.concat(''),
+						.concat({
+							strName: '',
+						}),
 				}
 			};
 		default:
