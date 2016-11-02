@@ -45,8 +45,8 @@ const View = ({
                 return (
                   <span key={i} >
                     {
-                      objTag.numValue ?
-                      `${objTag.strName}: ${objTag.numValue}, ` :
+                      objTag.strValue ?
+                      `${objTag.strName}: ${objTag.strValue}, ` :
                       `${objTag.strName}, `
                     }
                   </span>
@@ -77,7 +77,8 @@ const DatumBar = ({
   funcConvertToInput,
   funcSaveCurrentDatum,
   funcUpdateFocusedTagName,
-  numInputFocused,
+  funcUpdateFocusedTagValue,
+  numTagIndexFocused,
   objCurrentDatum,
   strDatumBarMode,
 }) => {
@@ -96,26 +97,47 @@ const DatumBar = ({
       <form onSubmit={funcOnSubmit} >
         <input
           name={0}
-          type={numInputFocused === 0 ? 'text' : 'button'}
-          autoFocus={numInputFocused === 0 ? true : false}
+          type={numTagIndexFocused === 0 ? 'text' : 'button'}
+          autoFocus={numTagIndexFocused === 0 ? true : false}
           value={time}
           onChange={funcUpdateFocusedTagName}
           onFocus={funcConvertToInput}
           onBlur={funcConvertToButton}
         />
         {objCurrentDatum.arrTags.map((objTag, i) => {
-          return (
-            <input
-              autoFocus={numInputFocused === i+1 ? true : false}
-              name={i+1}
-              key={i+1}
-              value={objTag.strName}
-              type={i+1 === numInputFocused ? 'text' : 'button'}
-              onChange={funcUpdateFocusedTagName}
-              onBlur={funcConvertToButton}
-              onFocus={funcConvertToInput}
-            />
-          );
+          if (objTag.strValue) {
+            return (
+              <span key={i+99}>
+                <input
+                  autoFocus={true}
+                  name={i+1}
+                  key={i+1}
+                  value={objTag.strName}
+                  onChange={funcUpdateFocusedTagName}
+                  onBlur={funcConvertToButton}
+                  onFocus={funcConvertToInput}
+                />
+                <input
+                  key={i-99}
+                  value={objTag.strValue}
+                  onChange={funcUpdateFocusedTagName}
+                />
+              </span>
+            );
+          } else {
+            return (
+              <input
+                autoFocus={numTagIndexFocused === i+1 ? true : false}
+                name={i+1}
+                key={i+1}
+                value={objTag.strName}
+                type={i+1 === numTagIndexFocused ? 'text' : 'button'}
+                onChange={funcUpdateFocusedTagName}
+                onBlur={funcConvertToButton}
+                onFocus={funcConvertToInput}
+              />
+            );
+          }
         })}
         <span>{' '}</span>
         <button
@@ -138,7 +160,7 @@ const App = ({
   funcUpdateFocusedTagName,
   funcConvertToButton,
   funcConvertToInput,
-  numInputFocused,
+  numTagIndexFocused,
   objCurrentDatum,
   strDatumBarMode,
 }) => {
@@ -156,7 +178,7 @@ const App = ({
         funcConvertToButton   ={funcConvertToButton}
         funcConvertToInput    ={funcConvertToInput}
         objCurrentDatum       ={objCurrentDatum}
-        numInputFocused       ={numInputFocused}
+        numTagIndexFocused       ={numTagIndexFocused}
         strDatumBarMode       ={strDatumBarMode}
       />
     </div>
@@ -168,7 +190,7 @@ const mapStateToProps = (state) => {
     arrDatumList: state.arrDatumList,
     objCurrentDatum: state.objCurrentDatum,
     strDatumBarMode: state.objDatumBar.strMode,
-    numInputFocused: state.objDatumBar.numInputFocused,
+    numTagIndexFocused: state.objDatumBar.numTagIndexFocused,
   };
 };
 

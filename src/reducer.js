@@ -41,7 +41,7 @@ const objInitState = {
 	],
 	objDatumBar: {
 		strMode: 'add',
-		numInputFocused: 1
+		numTagIndexFocused: 1
 	},
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
@@ -66,6 +66,10 @@ const reducer = (
 				arrDatumList: state.arrDatumList.concat({
 					...state.objCurrentDatum,
 					numTime: Date.now(),
+					arrTags: state.objCurrentDatum.arrTags
+						.filter(objTag => {
+							return objTag.strName
+						}), // filter out last empty tag (couldn't figure out .pop())
 				}),
 			};
 		case 'CACHE_CURRENT_DATUM':
@@ -87,7 +91,7 @@ const reducer = (
 				...state,
 				objDatumBar: {
 					...state.objDatumBar,
-					numInputFocused: action.intTagIndex,
+					numTagIndexFocused: action.intTagIndex,
 				},
 			};
 		//case 'CONVERT_TO_BUTTON':
@@ -120,10 +124,18 @@ const reducer = (
 					...state.objDatumBar,
 					strMode: 'add',
 				},
-				arrDatumList: state.arrDatumList.map(datum => {
-					return datum.strId === state.objCurrentDatum.strId ?
-					state.objCurrentDatum : datum;
-				}),
+				arrDatumList: state.arrDatumList
+					.map(datum => {
+						return datum.strId === state.objCurrentDatum.strId ?
+						{
+							...state.objCurrentDatum,
+							arrTags: state.objCurrentDatum.arrTags
+								.filter(objTag => {
+									return objTag.strName
+								}), // filter out last empty tag (couldn't figure out .pop())
+						} :
+						datum ;
+					}),
 			};
 		case 'UNCACHE_DATUM':
 			return {
@@ -145,7 +157,10 @@ const reducer = (
 						// replace the tag that changed
 						.map((objTag, i) => {
 							return i+1 === action.numIndex ?
-							{strName: action.strTagName} :
+							{
+								strName: action.strTagName,
+								strValue: objTag.strValue
+							} :
 							objTag ;
 						})
 						// remove any empty tags
