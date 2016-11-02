@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import {
   funcAddCurrentDatum,
-  funcUpdateCurrentDatum,
+  funcUpdateFocusedTagName,
   funcCacheCurrentDatum,
   funcClearCurrentDatum,
   funcConvertToButton,
@@ -76,7 +76,7 @@ const DatumBar = ({
   funcConvertToButton,
   funcConvertToInput,
   funcSaveCurrentDatum,
-  funcUpdateCurrentDatum,
+  funcUpdateFocusedTagName,
   numInputFocused,
   objCurrentDatum,
   strDatumBarMode,
@@ -99,7 +99,7 @@ const DatumBar = ({
           type={numInputFocused === 0 ? 'text' : 'button'}
           autoFocus={numInputFocused === 0 ? true : false}
           value={time}
-          onChange={funcUpdateCurrentDatum}
+          onChange={funcUpdateFocusedTagName}
           onFocus={funcConvertToInput}
           onBlur={funcConvertToButton}
         />
@@ -111,7 +111,7 @@ const DatumBar = ({
               key={i+1}
               value={objTag.strName}
               type={i+1 === numInputFocused ? 'text' : 'button'}
-              onChange={funcUpdateCurrentDatum}
+              onChange={funcUpdateFocusedTagName}
               onBlur={funcConvertToButton}
               onFocus={funcConvertToInput}
             />
@@ -135,7 +135,7 @@ const App = ({
   funcDeleteDatum,
   funcEditDatum,
   funcSaveCurrentDatum,
-  funcUpdateCurrentDatum,
+  funcUpdateFocusedTagName,
   funcConvertToButton,
   funcConvertToInput,
   numInputFocused,
@@ -150,7 +150,7 @@ const App = ({
         funcDeleteDatum={funcDeleteDatum}
       />
       <DatumBar
-        funcUpdateCurrentDatum={funcUpdateCurrentDatum}
+        funcUpdateFocusedTagName={funcUpdateFocusedTagName}
         funcAddCurrentDatum   ={funcAddCurrentDatum}
         funcSaveCurrentDatum  ={funcSaveCurrentDatum}
         funcConvertToButton   ={funcConvertToButton}
@@ -201,10 +201,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(funcSaveCurrentDatum());
       dispatch(funcUncacheDatum());
     },
-    funcUpdateCurrentDatum: (e) => {
-      dispatch(funcUpdateCurrentDatum(
+    funcUpdateFocusedTagName: (e) => {
+      dispatch(funcUpdateFocusedTagName(
         e.target.value,
-        e.target.name
+        parseInt(e.target.name)
       ));
     },
   };

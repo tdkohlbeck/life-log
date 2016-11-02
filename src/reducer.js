@@ -1,9 +1,15 @@
-import uuid from 'node-uuid';
+//import uuid from 'node-uuid';
+
+let i = 0
+const strRandId = () => {
+	i++;
+	return i.toString();
+};
 
 const objInitState = {
 	arrDatumList: [
 		{
-			strId: uuid.v4(),
+			strId: strRandId(),
 			numTime: Date.now(),
 			arrTags: [
 				{
@@ -11,12 +17,12 @@ const objInitState = {
 				},
 				{
 					strName: 'minutes',
-					numValue: 30,
+					strValue: '30',
 				},
 			],
 		},
 		{
-			strId: uuid.v4(),
+			strId: strRandId(),
 			numTime: Date.now(),
 			arrTags: [
 				{
@@ -24,11 +30,11 @@ const objInitState = {
 				},
 				{
 					strName: 'squats',
-					numValue: 100,
+					strValue: '100',
 				},
 				{
 					strName: 'heartrate',
-					numValue: 158,
+					strValue: '158',
 				},
 			],
 		},
@@ -39,7 +45,7 @@ const objInitState = {
 	},
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
-		strId: uuid.v4(),
+		strId: strRandId(),
 		numTime: Date.now(),
 		arrTags: [
 			{
@@ -73,7 +79,7 @@ const reducer = (
 				objCurrentDatum: {
 					...objInitState.objCurrentDatum,
 					numTime: Date.now(),
-					strId: uuid.v4(),
+					strId: strRandId(),
 				},
 			};
 		case 'CONVERT_TO_INPUT':
@@ -125,21 +131,21 @@ const reducer = (
 				objCurrentDatum: state.objDatumCache,
 				objDatumCache: {},
 			};
-		case 'UPDATE_CURRENT_DATUM':
-			let strLastChar = action.strTag
-				.charAt(action.strTag.length - 1);
+		case 'UPDATE_FOCUSED_TAG_NAME':
+			//let strLastChar = action.strTagName
+			//	.charAt(action.strTagName.length - 1);
 			return {
 				...state,
 				objCurrentDatum: {
 					...state.objCurrentDatum,
-					numTime: state.objDatumBar.strMode == 'edit' ?
+					numTime: state.objDatumBar.strMode === 'edit' ?
 						state.objCurrentDatum.numTime :
 						Date.now() ,
 					arrTags: state.objCurrentDatum.arrTags
 						// replace the tag that changed
 						.map((objTag, i) => {
-							return i+1 == action.intTagIndex ?
-							{strName: action.strTag} :
+							return i+1 === action.numIndex ?
+							{strName: action.strTagName} :
 							objTag ;
 						})
 						// remove any empty tags
@@ -152,6 +158,7 @@ const reducer = (
 						}),
 				}
 			};
+		//case 'UPDATE_FOCUSED_TAG_VALUE':
 		default:
 			return state;
 	}

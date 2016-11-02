@@ -18,12 +18,20 @@ export const funcConvertToInput = (intTagIndex) => {
 	};
 };
 
-export const funcUpdateCurrentDatum = (strTag, intTagIndex) => {
+export const funcUpdateFocusedTagName = (strTagName, numIndex) => {
 	return {
-		type: 'UPDATE_CURRENT_DATUM',
-		intTagIndex,
-		strTag,
+		type: 'UPDATE_FOCUSED_TAG_NAME',
+		numIndex,
+		strTagName,
 	};
+};
+
+export const funcUpdateFocusedTagValue = (strTagValue, numIndex) => {
+	return {
+		type: 'UPDATE_FOCUSED_TAG_VALUE',
+		numIndex,
+		strTagValue,
+	}
 };
 
 export const funcCacheCurrentDatum = () => {
