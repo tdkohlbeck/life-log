@@ -99,8 +99,9 @@ const DatumBar = ({
         <input
           name={0}
           type={objState.numTagIndexFocused === 0 ? 'text' : 'button'}
-          autoFocus={objState.numTagIndexFocused === 0 ? true : false}
-          value={time}
+          autoFocus={objState.numTagIndexFocused === 0}
+          value={getTimeString(objCurrentDatum.numTime)}
+          size={getTimeString(objCurrentDatum.numTime).length}
           onChange={funcUpdateFocusedTagName}
           onFocus={funcConvertToInput}
         />
@@ -108,11 +109,15 @@ const DatumBar = ({
           if (i+1 === objState.numTagIndexFocused) {
             if (objTag.strName) {
               return (
-                <span key={i+99}>
+                <span
+                  key={i+99}
+                  className='tag'
+                  >
                   <input
                     name={i+1}
                     key={i+1}
                     id={'name'}
+                    className='tag-name'
                     size={objTag.strName.length}
                     onFocus={funcConvertToInput}
                     type={
@@ -130,6 +135,7 @@ const DatumBar = ({
                       objState.numTagIndexFocused === i+1 &&
                       objState.strTagTypeFocused === 'name'
                     }
+                    onBlur={funcConvertToButton}
                   />
                   <input
                     name={i+1}
@@ -160,6 +166,7 @@ const DatumBar = ({
                       objTag.strValue
                     }
                     onChange={funcUpdateFocusedTagValue}
+                    onBlur={funcConvertToButton}
                   />
                 </span>
               );
@@ -178,6 +185,7 @@ const DatumBar = ({
                     objState.numTagIndexFocused === i+1 &&
                     !objTag.strName
                   }
+                  onBlur={funcConvertToButton}
 
                 />
               );
@@ -189,32 +197,32 @@ const DatumBar = ({
                 key={i+1}
                 id={'name'}
                 size={objTag.strName.length}
+                onFocus={funcConvertToInput}
                 value={
-                  /*!objTag.strName &&
-                  objState.numTagIndexFocused !== i+1 ?
-                  '+t' :
-                  objTag.strName*/
                   objTag.strValue ?
                   `${objTag.strName}: ${objTag.strValue}` :
                     objTag.strName ?
-                    `${objTag.strName}` :
+                    objTag.strName :
                     `+t`
                 }
-                onFocus={funcConvertToInput}
                 type={'button'}
                 onChange={funcUpdateFocusedTagName}
+                onBlur={funcConvertToButton}
               />
             );
           }
         })}
         <span>{' '}</span>
-        <button
+        <input
+          type='button'
+          value={
+            strDatumBarMode == 'add' ?
+              'Add' : 'Edit'
+          }
           name={objCurrentDatum.arrTags.length + 1}
           onClick={funcOnSubmit}
           onFocus={funcConvertToInput}
-        >
-          {strDatumBarMode == 'add' ? '+' : 'e'}
-        </button>
+        />
       </form>
     </div>
   );

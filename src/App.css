@@ -1,4 +1,35 @@
-.App {
+:root {
+  font-size: calc(0.5em + 1vw);
+}
+
+.app {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+}
+
+#datum-bar {
+  /*box-shadow: 0em -0.125em 1em grey;*/
+  background-color: lightgrey;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1em 0;
+}
+
+input {
+  margin-right: 1em;
+}
+
+.tag-name {
+  margin-right: 0em;
+}
+
+/*.App {
   text-align: center;
 }
 
@@ -22,3 +53,4 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+*/
