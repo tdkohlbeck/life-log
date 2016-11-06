@@ -11,10 +11,11 @@ export const funcConvertToButton = (intTagIndex) => {
 	};
 };
 
-export const funcConvertToInput = (intTagIndex) => {
+export const funcConvertToInput = (intTagIndex, strTagType) => {
 	return {
 		type: 'CONVERT_TO_INPUT',
 		intTagIndex,
+		strTagType,
 	};
 };
 
@@ -27,7 +28,6 @@ export const funcUpdateFocusedTagName = (strTagName, numIndex) => {
 };
 
 export const funcUpdateFocusedTagValue = (strTagValue, numIndex) => {
-	console.log(strTagValue);
 	return {
 		type: 'UPDATE_FOCUSED_TAG_VALUE',
 		numIndex,

@@ -41,7 +41,8 @@ const objInitState = {
 	],
 	objDatumBar: {
 		strMode: 'add',
-		numTagIndexFocused: 1
+		numTagIndexFocused: 1,
+		strTagTypeFocused: 'name',
 	},
 	objDatumCache: {},
 	objCurrentDatum: { // datumCurrent ?
@@ -93,6 +94,7 @@ const reducer = (
 				objDatumBar: {
 					...state.objDatumBar,
 					numTagIndexFocused: action.intTagIndex,
+					strTagTypeFocused: action.strTagType
 				},
 			};
 		//case 'CONVERT_TO_BUTTON':
@@ -191,11 +193,11 @@ const reducer = (
 								strValue: action.strTagValue
 							} :
 							objTag ;
-						})
-						// remove any empty tags
-						.filter(objTag => {
-							return objTag.strValue != ''; // '' == false
 						}),
+						// remove any empty tags
+						/*.filter(objTag => {
+							return objTag.strValue != ''; // '' == false
+						}),*/
 				}
 			}
 		default:
