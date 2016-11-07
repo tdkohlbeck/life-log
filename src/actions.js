@@ -1,6 +1,6 @@
-export const funcAddCurrentDatum = () => {
+export const funcAddActiveDatum = () => {
 	return {
-		type: 'ADD_CURRENT_DATUM',
+		type: 'ADD_ACTIVE_DATUM',
 	};
 };
 

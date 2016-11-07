@@ -1,17 +1,89 @@
-//import uuid from 'node-uuid';
+import uuid from 'node-uuid';
+let strId = () => uuid.v4();
 
-let i = 0
-const strRandId = () => {
-	i++;
-	return i.toString();
+export const enumLabelType = {
+  NAME: 0,
+  VALUE: 1,
+  TAG: 2,
+  properties: {
+    0: {description: 'tag name'},
+    1: {description: 'tag value'},
+    2: {description: 'tag name-value pair'}
+  },
 };
 
-const objInitState = {
-	arrDatumList: [
+export const enumBarMode = {
+	ADD: 0,
+	EDIT: 1,
+	properties: {
+		0: {description: 'C-rud'},
+		1: {description: 'cr-U-d'},
+	},
+}
+
+const stateDatumBarInit = {
+	datumActive: {
+		strId: strId(),
+		numTime: Date.now(),
+		tags: [
+			{
+				strName: 'health',
+			},
+			{
+				strName: 'happiness',
+				strValue: '4',
+			},
+			{
+				strName: 'energy',
+				strValue: '3',
+			},
+		],
+	},
+	datumsCacheStack: [],
+	enumMode: enumBarMode.ADD,
+	iBlurred: 0,
+	iFocused: 1,
+	strTagTypeFocused_DEP: 'name',
+	statesInputs: [
 		{
-			strId: strRandId(),
+			enumType: enumLabelType.NAME,
+			isEmpty: false,
+			numTag: 0,
+			strLabel: 'health',
+		},
+		{
+			enumType: enumLabelType.NAME,
+			isEmpty: false,
+			numTag: 1,
+			strLabel: 'happiness',
+		},
+		{
+			enumType: enumLabelType.VALUE,
+			isEmpty: false,
+			numTag: 1,
+			strLabel: '4',
+		},
+		{
+			enumType: enumLabelType.NAME,
+			isEmpty: false,
+			numTag: 2,
+			strLabel: 'energy',
+		},
+		{
+			enumType: enumLabelType.VALUE,
+			isEmpty: false,
+			numTag: 2,
+			strLabel: '3',
+		},
+	],
+};
+
+const stateAppInit = {
+	datumsList: [
+		{
+			strId: strId(),
 			numTime: Date.now(),
-			arrTags: [
+			tags: [
 				{
 					strName: 'meditate',
 				},
@@ -22,9 +94,9 @@ const objInitState = {
 			],
 		},
 		{
-			strId: strRandId(),
+			strId: strId(),
 			numTime: Date.now(),
-			arrTags: [
+			tags: [
 				{
 					strName: 'exercise',
 				},
@@ -39,102 +111,179 @@ const objInitState = {
 			],
 		},
 	],
-	objDatumBar: {
-		strMode: 'add',
-		numTagIndexFocused: 1,
-		strTagTypeFocused: 'name',
-	},
-	objDatumCache: {},
-	objCurrentDatum: { // datumCurrent ?
-		strId: strRandId(),
-		numTime: Date.now(),
-		arrTags: [
+	stateDatumBar: {
+		datumActive: {
+			strId: strId(),
+			numTime: Date.now(),
+			tags: [
+				{
+					strName: 'health',
+				},
+				{
+					strName: 'happiness',
+					strValue: '4',
+				},
+				{
+					strName: 'energy',
+					strValue: '3',
+				},
+			],
+		},
+		datumsCacheStack: [],
+		enumMode: enumBarMode.ADD,
+		iBlurred: 0,
+		iFocused: 1,
+		strTagTypeFocused_DEP: 'name',
+		statesInputs: [
 			{
-				strName: '',
-				strValue: '',
+				enumType: enumLabelType.NAME,
+				isEmpty: false,
+				numTag: 0,
+				strLabel: 'yey?',
+			},
+			{
+				enumType: enumLabelType.NAME,
+				isEmpty: false,
+				numTag: 1,
+				strLabel: 'bravo!',
+			},
+			{
+				enumType: enumLabelType.VALUE,
+				isEmpty: false,
+				numTag: 1,
+				strLabel: '4',
+			},
+			{
+				enumType: enumLabelType.NAME,
+				isEmpty: false,
+				numTag: 2,
+				strLabel: 'energy',
+			},
+			{
+				enumType: enumLabelType.VALUE,
+				isEmpty: false,
+				numTag: 2,
+				strLabel: '3',
 			},
 		],
 	},
 };
 
-const reducer = (
-	state = objInitState,
+const reducerDatumBar = (
+	state = stateDatumBarInit,
 	action
 ) => {
 	switch (action.type) {
-		case 'ADD_CURRENT_DATUM':
+		case 'CACHE_ACTIVE_DATUM':
 			return {
 				...state,
-				arrDatumList: state.arrDatumList.concat({
-					...state.objCurrentDatum,
+				datumsCacheStack: [
+					...state.datumsCacheStack,
+					state.datumActive,
+				],
+			};
+		case 'UNCACHE_DATUM':
+			state.datumsCacheStack.pop();
+			return state;
+		case 'CLEAR_ACTIVE_DATUM':
+			return {
+				...state,
+				datumActive: {
+					...stateDatumBarInit.datumActive,
 					numTime: Date.now(),
-					arrTags: state.objCurrentDatum.arrTags
-						.filter(objTag => {
-							return objTag.strName
+					strId: strId(),
+				},
+			};
+		case 'FOCUS_INPUT': // TODO: replace CONVERT_TO_INPUT
+			return {
+				...state,
+				statesInputs: [
+					...state.statesInputs,
+				],
+			};
+		case 'UPDATE_ACTIVE_INPUT':
+		default:
+	}
+};
+
+const reducerApp = (
+	state = stateAppInit,
+	action
+) => {
+	switch (action.type) {
+		case 'ADD_ACTIVE_DATUM':
+			return {
+				...state,
+				datumsList: state.datumsList.concat({
+					...state.datumActive,
+					numTime: Date.now(),
+					tags: state.stateDatumBar.datumActive.tags
+						.filter(tag => {
+							return tag.strName
 						}), // filter out last empty tag (couldn't figure out .pop())
 				}),
 			};
 		case 'CACHE_CURRENT_DATUM':
 			return {
 				...state,
-				objDatumCache: state.objCurrentDatum,
+				datumCached: state.datumActive,
 			};
 		case 'CLEAR_CURRENT_DATUM':
 			return {
 				...state,
-				objCurrentDatum: {
-					...objInitState.objCurrentDatum,
+				datumActive: {
+					...stateAppInit.datumActive,
 					numTime: Date.now(),
-					strId: strRandId(),
+					strId: strId(),
 				},
 			};
 		case 'CONVERT_TO_INPUT':
 			return {
 				...state,
-				objDatumBar: {
-					...state.objDatumBar,
-					numTagIndexFocused: action.intTagIndex,
-					strTagTypeFocused: action.strTagType
+				stateDatumBar: {
+					...state.stateDatumBar,
+					iFocused: action.intTagIndex,
+					strTagTypeFocused_DEP: action.strTagType
 				},
 			};
 		//case 'CONVERT_TO_BUTTON':
 		case 'DELETE_DATUM':
 			return {
 				...state,
-				arrDatumList: state.arrDatumList.filter(datum => {
+				datumsList: state.datumsList.filter(datum => {
 					return datum.strId !== action.strId;
 				}),
-				objCurrentDatum: state.objDatumBar.strMode === 'edit' &&
-					state.objCurrentDatum.strId === action.strId ?
-					objInitState.objCurrentDatum :
-					state.objCurrentDatum,
+				datumActive: state.stateDatumBar.strMode === 'edit' &&
+					state.datumActive.strId === action.strId ?
+					stateAppInit.datumActive :
+					state.datumActive,
 			};
 		case 'EDIT_DATUM':
 			return {
 				...state,
-				objDatumBar: {
-					...state.objDatumBar,
+				stateDatumBar: {
+					...state.stateDatumBar,
 					strMode: 'edit',
 				},
-				objCurrentDatum: state.arrDatumList.filter(datum => {
+				datumActive: state.datumsList.filter(datum => {
 					return datum.strId === action.strId;
 				})[0], // escape array returned by filter
 			};
 		case 'SAVE_CURRENT_DATUM':
 			return {
 				...state,
-				objDatumBar: {
-					...state.objDatumBar,
+				stateDatumBar: {
+					...state.stateDatumBar,
 					strMode: 'add',
 				},
-				arrDatumList: state.arrDatumList
+				datumsList: state.datumsList
 					.map(datum => {
-						return datum.strId === state.objCurrentDatum.strId ?
+						return datum.strId === state.datumActive.strId ?
 						{
-							...state.objCurrentDatum,
-							arrTags: state.objCurrentDatum.arrTags
-								.filter(objTag => {
-									return objTag.strName
+							...state.datumActive,
+							tags: state.datumActive.tags
+								.filter(tag => {
+									return tag.strName
 								}), // filter out last empty tag (couldn't figure out .pop())
 						} :
 						datum ;
@@ -143,61 +292,65 @@ const reducer = (
 		case 'UNCACHE_DATUM':
 			return {
 				...state,
-				objCurrentDatum: state.objDatumCache,
-				objDatumCache: {},
+				datumActive: state.datumCached,
+				datumCached: {},
 			};
 		case 'UPDATE_FOCUSED_TAG_NAME':
-			//let strLastChar = action.strTagName
-			//	.charAt(action.strTagName.length - 1);
+			// TODO: detect ':' and switch to tag value
 			return {
 				...state,
-				objCurrentDatum: {
-					...state.objCurrentDatum,
-					numTime: state.objDatumBar.strMode === 'edit' ?
-						state.objCurrentDatum.numTime :
-						Date.now() ,
-					arrTags: state.objCurrentDatum.arrTags
+				stateDatumBar: {
+					...state.stateDatumBar,
+					datumActive: {
+						...state.stateDatumBar.datumActive,
+						numTime: state.stateDatumBar.enumMode === enumBarMode.EDIT ?
+							state.datumActive.numTime :
+							Date.now() ,
+						tags: state.stateDatumBar.datumActive.tags
 						// replace the tag that changed
-						.map((objTag, i) => {
-							return i+1 === action.numIndex ?
-							{
-								strName: action.strTagName,
-								strValue: objTag.strValue
-							} :
-							objTag ;
-						})
-						// remove any empty tags
-						.filter(objTag => {
-							return objTag.strName != ''; // '' == false
-						})
-						// make sure there's an empty tag available!
-						.concat({
-							strName: '',
-						}),
-				}
+							.map((tag, i) => {
+								return i+1 === action.numIndex ?
+								{
+									strName: action.strTagName,
+									strValue: tag.strValue
+								} :
+								tag
+							})
+							// remove any empty tags
+							.filter(tag => {
+								return tag.strName !== ''; // '' == false
+							})
+							// make sure there's an empty tag available!
+							.concat({
+								strName: '',
+							}),
+					},
+				},
 			};
 		case 'UPDATE_FOCUSED_TAG_VALUE':
 			return {
 				...state,
-				objCurrentDatum: {
-					...state.objCurrentDatum,
-					numTime: state.objDatumBar.strMode === 'edit' ?
-						state.objCurrentDatum.numTime :
-						Date.now() ,
-					arrTags: state.objCurrentDatum.arrTags
+				stateDatumBar: {
+					datumActive: {
+						...state.stateDatumBar.datumActive,
+						numTime: state.stateDatumBar.enumMode === enumBarMode.EDIT ?
+							state.stateDatumBar.datumActive.numTime :
+							Date.now() ,
+						tags: state.stateDatumBar.datumActive.tags
 						// replace the tag that changed
-						.map((objTag, i) => {
+						.map((tag, i) => {
 							return i+1 === action.numIndex ?
 							{
-								strName: objTag.strName,
+								strName: tag.strName,
 								strValue: action.strTagValue
 							} :
-							objTag ;
+							tag ;
 						}),
 						// remove any empty tags
-						/*.filter(objTag => {
-							return objTag.strValue != ''; // '' == false
+						/*.filter(tag => {
+							return tag.strValue != ''; // '' == false
 						}),*/
+					}
 				}
 			}
 		default:
@@ -205,4 +358,4 @@ const reducer = (
 	}
 };
 
-export default reducer;
+export default reducerApp;

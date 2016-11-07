@@ -1,5 +1,5 @@
 :root {
-  font-size: calc(0.5em + 1vw);
+  font-size: calc(0.75em + 1vw);
 }
 
 .app {
@@ -12,17 +12,22 @@
 
 }
 
-#datum-bar {
+#div-datum-bar {
   /*box-shadow: 0em -0.125em 1em grey;*/
-  background-color: lightgrey;
+  background-color: #f8f8f8;
   position: relative;
   display: flex;
   justify-content: flex-end;
-  padding: 1em 0;
+  padding: 0.5em 0;
 }
 
 input {
+  font-size: 1em;
   margin-right: 1em;
+  background-color: mistyrose;
+  border: none;
+  border-radius: 0.25em;
+  margin: 0.25em;
 }
 
 .tag-name {
