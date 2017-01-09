@@ -35,3 +35,13 @@
 		-on unfocus convert backt to button
 	- auto-focus next input
 	- register input as value pair
+
+* LOAD DATUM
+1. create input states given datum
+2. create inputs given input states
+
+* MODIFY DATUM
+1. re-create inputs given modified input states
+
+* SAVE DATUM
+1. create datum given input states

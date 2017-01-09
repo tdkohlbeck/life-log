@@ -4,18 +4,17 @@ export const funcAddActiveDatum = () => {
 	};
 };
 
-export const funcConvertToButton = (intTagIndex) => {
+export const funcConvertToButton = (intInputId) => {
 	return {
 		type: 'CONVERT_TO_BUTTON',
-		intTagIndex,
+		intInputId,
 	};
 };
 
-export const funcConvertToInput = (intTagIndex, strTagType) => {
+export const funcConvertToInput = (intInputId) => {
 	return {
 		type: 'CONVERT_TO_INPUT',
-		intTagIndex,
-		strTagType,
+		intInputId,
 	};
 };
 

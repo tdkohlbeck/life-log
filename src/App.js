@@ -7,6 +7,7 @@ import {
   funcAddActiveDatum,
   funcUpdateFocusedTagName,
   funcUpdateFocusedTagValue,
+  funcUpdateFocusedInput,
   funcCacheCurrentDatum,
   funcClearCurrentDatum,
   funcConvertToButton,
@@ -55,6 +56,7 @@ const App = ({
         funcSaveActiveDatum      ={funcSaveActiveDatum}
         funcConvertToButton      ={funcConvertToButton}
         funcConvertToInput       ={funcConvertToInput}
+        funcUpdateFocusedInput   ={funcUpdateFocusedInput}
         state                    ={stateDatumBar}
       />
     </div>
@@ -77,17 +79,11 @@ const mapDispatchToProps = (dispatch) => {
     },
     funcConvertToButton: (e) => {
       e.preventDefault();
-      let intTagIndex = parseInt(e.target.name);
-      dispatch(funcConvertToButton(intTagIndex));
+      dispatch(funcConvertToButton(e.target.id));
     },
     funcConvertToInput: (e) => {
       e.preventDefault();
-      //if (e.target.value == ':') e.target.select();
-      let intTagIndex = parseInt(e.target.name);
-      dispatch(funcConvertToInput(
-        intTagIndex,
-        e.target.id
-      ));
+      dispatch(funcConvertToInput(e.target.id));
     },
     funcDeleteDatum: (e) => {
       dispatch(funcDeleteDatum(e.target.value));
@@ -111,6 +107,12 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(funcUpdateFocusedTagValue(
         e.target.value,
         parseInt(e.target.name)
+      ));
+    },
+    funcUpdateFocusedInput: (e) => {
+      dispatch(funcUpdateFocusedInput(
+        e.target.value,
+        e.target.id
       ));
     }
   };

@@ -1,5 +1,7 @@
-import uuid from 'node-uuid';
-let strId = () => uuid.v4();
+//import { getTimeString } from './utils';
+//import uuid from 'node-uuid';
+let id = 0;
+let strId = () => id++; //uuid.v4();
 
 export const enumLabelType = {
   NAME: 0,
@@ -21,61 +23,61 @@ export const enumBarMode = {
 	},
 }
 
+export const funcCreateInputStates = (datum) => {
+  let statesInputs = [];
+  let i = 0;
+  for (let tag of datum.tags) {
+    statesInputs.push({
+      class: 'tag-name',
+      enumType: enumLabelType.NAME,
+      id: i++,//`tagName${i}`,
+      key: `tagName${i}`,
+      name: 'tagName',
+      size: tag.strName.length,
+      type: 'button',
+      intTag: i,
+      value: tag.strName,
+    });
+    if (tag.strValue) statesInputs.push({
+      class: 'tag-value',
+      enumType: enumLabelType.VALUE,
+      id: i++,//`tagValue${i}`,
+      key: `tagValue${i}`,
+      name: 'tagValue',
+      size: tag.strValue.length,
+      type: 'button',
+      intTag: i,
+      value: tag.strValue,
+    });
+
+  }
+  return statesInputs;
+};
+
+const datumActiveInit = {
+  strId: strId(),
+  numTime: Date.now(),
+  tags: [
+    {
+      strName: 'health',
+    },
+    {
+      strName: 'happiness',
+      strValue: '4',
+    },
+    {
+      strName: 'energy',
+      strValue: '3',
+    },
+  ],
+};
+
 const stateDatumBarInit = {
-	datumActive: {
-		strId: strId(),
-		numTime: Date.now(),
-		tags: [
-			{
-				strName: 'health',
-			},
-			{
-				strName: 'happiness',
-				strValue: '4',
-			},
-			{
-				strName: 'energy',
-				strValue: '3',
-			},
-		],
-	},
+	datumActive: datumActiveInit,
 	datumsCacheStack: [],
 	enumMode: enumBarMode.ADD,
-	iBlurred: 0,
-	iFocused: 1,
 	strTagTypeFocused_DEP: 'name',
-	statesInputs: [
-		{
-			enumType: enumLabelType.NAME,
-			isEmpty: false,
-			numTag: 0,
-			strLabel: 'health',
-		},
-		{
-			enumType: enumLabelType.NAME,
-			isEmpty: false,
-			numTag: 1,
-			strLabel: 'happiness',
-		},
-		{
-			enumType: enumLabelType.VALUE,
-			isEmpty: false,
-			numTag: 1,
-			strLabel: '4',
-		},
-		{
-			enumType: enumLabelType.NAME,
-			isEmpty: false,
-			numTag: 2,
-			strLabel: 'energy',
-		},
-		{
-			enumType: enumLabelType.VALUE,
-			isEmpty: false,
-			numTag: 2,
-			strLabel: '3',
-		},
-	],
+	statesInputs: funcCreateInputStates(datumActiveInit),
 };
 
 const stateAppInit = {
@@ -111,64 +113,10 @@ const stateAppInit = {
 			],
 		},
 	],
-	stateDatumBar: {
-		datumActive: {
-			strId: strId(),
-			numTime: Date.now(),
-			tags: [
-				{
-					strName: 'health',
-				},
-				{
-					strName: 'happiness',
-					strValue: '4',
-				},
-				{
-					strName: 'energy',
-					strValue: '3',
-				},
-			],
-		},
-		datumsCacheStack: [],
-		enumMode: enumBarMode.ADD,
-		iBlurred: 0,
-		iFocused: 1,
-		strTagTypeFocused_DEP: 'name',
-		statesInputs: [
-			{
-				enumType: enumLabelType.NAME,
-				isEmpty: false,
-				numTag: 0,
-				strLabel: 'yey?',
-			},
-			{
-				enumType: enumLabelType.NAME,
-				isEmpty: false,
-				numTag: 1,
-				strLabel: 'bravo!',
-			},
-			{
-				enumType: enumLabelType.VALUE,
-				isEmpty: false,
-				numTag: 1,
-				strLabel: '4',
-			},
-			{
-				enumType: enumLabelType.NAME,
-				isEmpty: false,
-				numTag: 2,
-				strLabel: 'energy',
-			},
-			{
-				enumType: enumLabelType.VALUE,
-				isEmpty: false,
-				numTag: 2,
-				strLabel: '3',
-			},
-		],
-	},
+	stateDatumBar: stateDatumBarInit,
 };
 
+// eslint-disable-next-line
 const reducerDatumBar = (
 	state = stateDatumBarInit,
 	action
@@ -194,6 +142,11 @@ const reducerDatumBar = (
 					strId: strId(),
 				},
 			};
+    case 'MAP_DATUM_INPUTS':
+      return {
+        ...state,
+        statesInputs: funcCreateInputStates(state.datumActive),
+      };
 		case 'FOCUS_INPUT': // TODO: replace CONVERT_TO_INPUT
 			return {
 				...state,
@@ -201,7 +154,7 @@ const reducerDatumBar = (
 					...state.statesInputs,
 				],
 			};
-		case 'UPDATE_ACTIVE_INPUT':
+		//case 'UPDATE_ACTIVE_INPUT':
 		default:
 	}
 };
@@ -238,15 +191,25 @@ const reducerApp = (
 				},
 			};
 		case 'CONVERT_TO_INPUT':
+      let statesInputs = state.stateDatumBar.statesInputs;
+      statesInputs[action.intInputId].type = 'text';
 			return {
 				...state,
 				stateDatumBar: {
 					...state.stateDatumBar,
-					iFocused: action.intTagIndex,
-					strTagTypeFocused_DEP: action.strTagType
+          statesInputs: statesInputs,
 				},
 			};
-		//case 'CONVERT_TO_BUTTON':
+		case 'CONVERT_TO_BUTTON':
+      let statesInputss = state.stateDatumBar.statesInputs;
+      statesInputss[action.intInputId].type = 'button';
+      return {
+        ...state,
+        stateDatumBar: {
+          ...state.stateDatumBar,
+          statesInputs: statesInputss,
+        },
+      };
 		case 'DELETE_DATUM':
 			return {
 				...state,

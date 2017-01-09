@@ -1,4 +1,5 @@
 import React from 'react';
+import Input from '../Input';
 import { getTimeString } from '../../utils';
 
 import {
@@ -12,6 +13,7 @@ export const DatumBar = ({
   funcSaveActiveDatum,
   funcUpdateFocusedTagName,
   funcUpdateFocusedTagValue,
+  funcUpdateFocusedInput,
   state,
 }) => {
   let funcOnSubmit;
@@ -20,25 +22,48 @@ export const DatumBar = ({
   } else if (state.enumMode === enumBarMode.EDIT) {
     funcOnSubmit = funcSaveActiveDatum;
   }
+  let funcGenerateColor = () => {
+    let numColors = 15; // eslint-disable-next-line
+    let numRandColor = Math.floor(Math.random() * numColors) * 360 / numColors;
+    return "grey";//`hsl(${numRandColor}, 60%, 75%)`;
+  }
+  let funcGenerateStyle = () => {
+    return {
+      backgroundColor: funcGenerateColor(),
+    }
+  };
   return (
-    <div id='div-datum-bar'>
+    <div id='div-datum-bar' >
       <form onSubmit={funcOnSubmit} >
         <input
-          name={0}
-          type={state.iFocused === 0 ? 'text' : 'button'}
           autoFocus={state.iFocused === 0}
-          value={getTimeString(state.datumActive.numTime)}
+          name={0}
           size={getTimeString(state.datumActive.numTime).length}
+          style={funcGenerateStyle()}
+          type={state.iFocused === 0 ? 'text' : 'button'}
+          value={getTimeString(state.datumActive.numTime)}
           onChange={funcUpdateFocusedTagName}
           onFocus={funcConvertToInput}
         />
-        {state.datumActive.tags.map((tag, i) => {
+      {state.statesInputs.map((stateInput, i) => {
+        return (
+          <Input
+            key={i}
+            stateInput={stateInput}
+            onFocus={funcConvertToInput}
+            onBlur={funcConvertToButton}
+            onChange={funcUpdateFocusedInput}
+          />
+        )
+      })}
+        {/*state.datumActive.tags.map((tag, i) => {
           if (i+1 === state.iFocused) {
             if (tag.strName) {
               return (
                 <span
                   key={i+99}
                   className='tag'
+                  style={funcGenerateStyle()}
                   >
                   <input
                     name={i+1}
@@ -104,6 +129,7 @@ export const DatumBar = ({
                   key={i+1}
                   id={'name'}
                   size={tag.strName ? tag.strName.length : 1}
+                  style={funcGenerateStyle()}
                   value={tag.strName}
                   onFocus={funcConvertToInput}
                   type={i+1 === state.iFocused ? 'text' : 'button'}
@@ -124,6 +150,7 @@ export const DatumBar = ({
                 key={i+1}
                 id={'name'}
                 size={tag.strName.length}
+                style={funcGenerateStyle()}
                 onFocus={funcConvertToInput}
                 value={
                   tag.strValue ?
@@ -138,7 +165,7 @@ export const DatumBar = ({
               />
             );
           }
-        })}
+        })*/}
         <span>{' '}</span>
         <input
           type='button'
@@ -147,6 +174,7 @@ export const DatumBar = ({
               'Add' : 'Edit'
           }
           name={state.datumActive.tags.length + 1}
+          style={funcGenerateStyle()}
           onClick={funcOnSubmit}
           onFocus={funcConvertToInput}
         />
